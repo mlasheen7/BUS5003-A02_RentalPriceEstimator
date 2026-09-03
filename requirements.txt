@@ -1,0 +1,43 @@
+# Core Data Science
+pandas==2.0.3
+numpy==1.24.3
+scikit-learn
+
+# AutoML & ML Models
+xgboost==2.0.0
+pycaret==3.3.2
+optuna==3.6.2
+
+# Model Interpretability & Explainability
+shap==0.42.1
+
+# ML & Model Evaluation
+scipy==1.11.2
+matplotlib==3.7.2
+seaborn==0.12.2
+
+# API & LLM Integration
+anthropic==0.7.0
+python-dotenv==1.0.0
+requests==2.31.0
+
+# Web Framework (for Streamlit deployment)
+streamlit==1.27.0
+plotly==5.16.1
+
+# Testing & Quality
+pytest==7.4.0
+pytest-cov==4.1.0
+
+# Notebooks
+jupyter==1.0.0
+ipykernel==6.25.1
+
+# Database (if using PostgreSQL)
+# psycopg2-binary==2.9.7
+# sqlalchemy==2.0.20
+
+# Development
+black==23.9.1
+flake8==6.0.0
+pylint==2.17.5
