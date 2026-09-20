@@ -1,0 +1,66 @@
+DATA DICTIONARY
+================================================================================
+
+STRUCTURE:
+--------------------------------------------------------------------------------
+Total records: 1177
+Unique suburbs: 200
+Bedroom types: [1, 2, 3, 4]
+Property types: ['flat', 'house']
+Data aggregation: Last 12 months of available data
+
+FEATURES (X) - 26 total:
+--------------------------------------------------------------------------------
+   1. bedrooms
+   2. Median_Household_Income_Weekly_AUD
+   3. IRSAD_Score
+   4. Labour_Force_Participation_Rate_Pct
+   5. Unemployment_Rate_Pct
+   6. Year12_Completion_Rate_Pct
+   7. employment_rate
+   8. distance_to_cbd_km
+   9. income_x_seifa
+  10. house_change_perc_24-25
+  11. Population_2021
+  12. rental_count
+  13. affluence_bin
+  14. affluence_very_low
+  15. affluence_low
+  16. affluence_medium
+  17. affluence_high
+  18. affluence_very_high
+  19. property_type
+  20. property_flat
+  21. property_house
+  22. growth_category
+  23. growth_declining
+  24. growth_slow_growth
+  25. growth_moderate_growth
+  26. growth_strong_growth
+
+TARGET (y):
+--------------------------------------------------------------------------------
+  median_weekly_rent (AUD, weekly) - What the model predicts
+
+KEY FEATURES:
+--------------------------------------------------------------------------------
+  1. bedrooms: Numeric (0-5), from 'studio' to '5 bed'
+  2. property_type: Categorical (one-hot encoded)
+     - flat/unit (normalized to 'flat')
+     - house
+     - townhouse (if present)
+  3. SEIFA: Socio-economic affluence score (800-1200)
+  4. income: Median household income weekly (AUD)
+  5. distance_to_cbd_km: Distance to Melbourne CBD (km)
+  6. employment_rate: Derived from labour force participation
+
+EXAMPLE PREDICTIONS:
+--------------------------------------------------------------------------------
+  Input: Footscray, 2-bed house, income $1200, SEIFA 1020
+  Output: $450/week
+
+  Input: Footscray, 2-bed flat, income $1200, SEIFA 1020
+  Output: $400/week (different property type)
+
+  Input: Toorak, 2-bed house, income $2100, SEIFA 1180
+  Output: $800/week (different suburb + income)
