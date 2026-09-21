@@ -1,0 +1,8 @@
+# Every pull request requires a review from the repo owner before merge.
+# See CONTRIBUTING.md for the full workflow.
+*       @mlasheen7
+
+# Area owners - add yourselves as the project splits into workstreams.
+# /src/data/      @mlasheen7
+# /src/models/    @mlasheen7
+# /app/           @mlasheen7
