@@ -1,3 +1,7 @@
+# NOTE: .gitignore does NOT support trailing comments on a pattern line.
+# Anything after a pattern (including "# ...") becomes part of the pattern.
+# Put comments on their own line only.
+
 # ===== Python =====
 __pycache__/
 *.py[cod]
@@ -10,8 +14,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
 parts/
 sdist/
 var/
@@ -29,6 +31,7 @@ env/
 ENV/
 env.bak/
 venv.bak/
+.venv/
 
 # ===== IDE =====
 .vscode/
@@ -36,27 +39,34 @@ venv.bak/
 *.swp
 *.swo
 *~
-.DS_Store  # Mac
 
 # ===== Environment Variables & Secrets =====
 .env
 .env.local
 .env.*.local
 secrets.json
+.streamlit/secrets.toml
 
-# ===== Data (Raw & Large Files) =====
-/data/raw/
+# ===== Data =====
+# Raw source files are never committed, but the folder itself is kept
+# so a fresh clone has the directory the pipeline and tests expect.
+/data/raw/*
+!/data/raw/.gitkeep
 /data/*.csv
 /data/*.xlsx
 /data/*.parquet
-!data/.gitkeep  # Keep directory structure
+!/data/.gitkeep
+# data/processed/ IS committed on purpose - see data/README.md.
+# The files are small (<500 KB total) and cannot be regenerated without
+# the raw files, which are not in the repo.
 
 # ===== Models (Large Binary Files) =====
 /models/*.pkl
 /models/*.joblib
 /models/*.h5
 /models/*.pt
-!models/.gitkeep
+/models/*.json
+!/models/.gitkeep
 
 # ===== Notebooks (Jupyter) =====
 .ipynb_checkpoints/
@@ -75,4 +85,5 @@ Thumbs.db
 # ===== Testing =====
 .pytest_cache/
 .coverage
+coverage.xml
 htmlcov/
