@@ -1,7 +1,14 @@
+# Python 3.9 - 3.11 only.
+# pycaret 3.3.2 caps numpy<1.27 and pandas<2.2, and neither numpy 1.24.3 nor
+# pandas 2.0.3 ships a wheel for Python 3.12+, so 3.12 fails to install.
+
 # Core Data Science
 pandas==2.0.3
 numpy==1.24.3
-scikit-learn
+scikit-learn==1.4.2
+
+# Excel readers - src/data/pipeline.py calls pd.read_excel on two .xlsx inputs
+openpyxl==3.1.5
 
 # AutoML & ML Models
 xgboost==2.0.0
@@ -17,7 +24,9 @@ matplotlib==3.7.2
 seaborn==0.12.2
 
 # API & LLM Integration
-anthropic==0.7.0
+# 0.69.0 is the newest release that still supports Python 3.9 and exposes the
+# Messages API (client.messages.create) that CLAUDE_API_SETUP_GUIDE.md uses.
+anthropic==0.69.0
 python-dotenv==1.0.0
 requests==2.31.0
 

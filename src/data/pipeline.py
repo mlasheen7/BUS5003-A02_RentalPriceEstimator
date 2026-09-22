@@ -32,10 +32,18 @@ import numpy as np
 from math import radians, cos, sin, asin, sqrt
 from datetime import datetime, timedelta
 import os
+import sys
 
 # ============================================================================
 # SETUP
 # ============================================================================
+
+# The progress output below uses Unicode (checkmarks, arrows, emoji). On Windows
+# stdout defaults to cp1252, which cannot encode them, so the script died with
+# UnicodeEncodeError on its first status line - including the line reporting a
+# missing input file. Force UTF-8 so it runs the same on Windows, Mac and Linux.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 
 print("=" * 80)
 print("DATA MERGING & FEATURE ENGINEERING PIPELINE (V2)")

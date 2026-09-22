@@ -29,6 +29,7 @@ env/
 ENV/
 env.bak/
 venv.bak/
+.venv/
 
 # ===== IDE =====
 .vscode/
@@ -36,27 +37,26 @@ venv.bak/
 *.swp
 *.swo
 *~
-.DS_Store  # Mac
 
 # ===== Environment Variables & Secrets =====
+# .env.example IS committed; the real .env never is.
 .env
 .env.local
 .env.*.local
 secrets.json
+.streamlit/secrets.toml
 
-# ===== Data (Raw & Large Files) =====
-/data/raw/
-/data/*.csv
-/data/*.xlsx
-/data/*.parquet
-!data/.gitkeep  # Keep directory structure
+# ===== Data =====
+# Raw source files are not committed (large, and redistributable only from the
+# original agencies). The directory itself is kept via data/raw/.gitkeep.
+# data/processed/ IS committed: it is small and it is the only record of the
+# raw inputs for anyone who does not have them. See data/README.md.
+/data/raw/*
+!/data/raw/.gitkeep
 
 # ===== Models (Large Binary Files) =====
-/models/*.pkl
-/models/*.joblib
-/models/*.h5
-/models/*.pt
-!models/.gitkeep
+/models/*
+!/models/.gitkeep
 
 # ===== Notebooks (Jupyter) =====
 .ipynb_checkpoints/
@@ -69,10 +69,14 @@ secrets.json
 /reports/*.html
 
 # ===== OS Files =====
+# Trailing comments are not allowed on pattern lines - git treats the comment
+# as part of the pattern, so keep them on their own line like this.
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # ===== Testing =====
 .pytest_cache/
 .coverage
+coverage.xml
 htmlcov/
