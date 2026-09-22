@@ -1,0 +1,90 @@
+{
+  "model_type": "XGBoost Regressor (Baseline)",
+  "model_version": "xgboost_v1.0",
+  "trained_at_utc": "2026-09-22T00:40:25.560659+00:00",
+  "data": {
+    "total_rows": 1177,
+    "training_rows": 941,
+    "test_rows": 236,
+    "source_feature_count": 26,
+    "selected_feature_count": 23,
+    "selected_features": [
+      "bedrooms",
+      "Median_Household_Income_Weekly_AUD",
+      "IRSAD_Score",
+      "Labour_Force_Participation_Rate_Pct",
+      "Unemployment_Rate_Pct",
+      "Year12_Completion_Rate_Pct",
+      "employment_rate",
+      "distance_to_cbd_km",
+      "income_x_seifa",
+      "house_change_perc_24-25",
+      "Population_2021",
+      "rental_count",
+      "affluence_very_low",
+      "affluence_low",
+      "affluence_medium",
+      "affluence_high",
+      "affluence_very_high",
+      "property_flat",
+      "property_house",
+      "growth_declining",
+      "growth_slow_growth",
+      "growth_moderate_growth",
+      "growth_strong_growth"
+    ],
+    "excluded_raw_categorical_features": [
+      "affluence_bin",
+      "property_type",
+      "growth_category"
+    ]
+  },
+  "split": {
+    "test_size": 0.2,
+    "random_state": 42,
+    "split_manifest": "data\\processed\\train_test_split_v1.0.json"
+  },
+  "metrics": {
+    "train": {
+      "rmse": 18.075483338176326,
+      "mae": 13.531222010959434,
+      "r2": 0.99305027696069
+    },
+    "test": {
+      "rmse": 49.176523914534826,
+      "mae": 31.60273683192366,
+      "r2": 0.9436443226804949
+    },
+    "cross_validation": {
+      "folds": 5,
+      "rmse_scores": [
+        70.56311377376525,
+        55.295183276341206,
+        54.562680698447096,
+        63.335262927736885,
+        50.059090890384475
+      ],
+      "rmse_mean": 58.76306631333498,
+      "rmse_std": 7.288000304397741
+    }
+  },
+  "hyperparameters": {
+    "n_estimators": 100,
+    "learning_rate": 0.1,
+    "max_depth": 5,
+    "min_child_weight": 1,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "objective": "reg:squarederror",
+    "random_state": 42,
+    "verbosity": 0,
+    "n_jobs": 1
+  },
+  "serialization_verified": true,
+  "library_versions": {
+    "xgboost": "2.0.0",
+    "scikit_learn": "1.4.2",
+    "pandas": "2.0.3",
+    "numpy": "1.24.3"
+  }
+}
