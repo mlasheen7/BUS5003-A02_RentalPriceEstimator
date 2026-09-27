@@ -1,1 +1,1 @@
-"""Model training and evaluation modules for the Rental Price Estimator."""
+"""Model training, evaluation and prediction."""

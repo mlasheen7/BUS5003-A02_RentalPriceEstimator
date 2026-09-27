@@ -1,1 +1,1 @@
-"""Rental Price Estimator source package."""
+"""Rental Price Estimator - source package."""
