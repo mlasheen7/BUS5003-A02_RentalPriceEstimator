@@ -6,7 +6,7 @@ need a key, and cost nothing.
 import pytest
 import requests
 
-from app.utils.api_client import OPENROUTER_URL, ExplanationClient, build_prompt
+from app.utils.api_client import DEFAULT_MODEL, OPENROUTER_URL, ExplanationClient, build_prompt
 from app.utils.shap_explainer import Driver, PredictionExplanation
 
 FOOTSCRAY = {
@@ -61,15 +61,26 @@ class FakeSession:
 
 def ok_body(text="Footscray rent is below the typical estimate mainly because it is a 2-bedroom flat."):
     return {
-        "model": "anthropic/claude-haiku-4.5",
-        "provider": "Amazon Bedrock",
+        "model": "openai/gpt-4o-mini",
+        "provider": "OpenAI",
         "choices": [{"message": {"content": text}}],
-        "usage": {"prompt_tokens": 380, "completion_tokens": 60, "cost": 0.00068},
+        "usage": {"prompt_tokens": 380, "completion_tokens": 60, "cost": 0.00009},
     }
 
 
-def make_client(session, api_key="test-key", model="anthropic/claude-haiku-4.5"):
+def make_client(session, api_key="test-key", model=DEFAULT_MODEL):
     return ExplanationClient(api_key=api_key, model=model, session=session)
+
+
+def test_default_is_gpt_4o_mini_with_haiku_as_backup():
+    # Chosen on a live comparison: fastest, cheapest and no rule breaks (see PR #4).
+    assert DEFAULT_MODEL == "openai/gpt-4o-mini"
+    session = FakeSession(FakeResponse(body=ok_body()))
+    make_client(session).explain(FOOTSCRAY, RESULT)
+    assert session.calls[0][1]["json"]["models"] == [
+        "openai/gpt-4o-mini",
+        "anthropic/claude-haiku-4.5",
+    ]
 
 
 def test_successful_call_returns_the_model_text():
@@ -79,23 +90,23 @@ def test_successful_call_returns_the_model_text():
     assert out["explanation"].startswith("Footscray rent")
     assert out["used_fallback"] is False
     assert out["error"] is None
-    assert out["model"] == "anthropic/claude-haiku-4.5"
-    assert out["provider"] == "Amazon Bedrock"
+    assert out["model"] == "openai/gpt-4o-mini"
+    assert out["provider"] == "OpenAI"
     assert (out["prompt_tokens"], out["completion_tokens"]) == (380, 60)
-    assert out["cost_usd"] == pytest.approx(0.00068)
+    assert out["cost_usd"] == pytest.approx(0.00009)
     assert out["latency_s"] >= 0
 
 
 def test_request_uses_openrouter_with_the_configured_model_and_key():
     session = FakeSession(FakeResponse(body=ok_body()))
-    make_client(session, model="openai/gpt-4o-mini").explain(FOOTSCRAY, RESULT)
+    make_client(session, model="anthropic/claude-haiku-4.5").explain(FOOTSCRAY, RESULT)
 
     url, kwargs = session.calls[0]
     assert url == OPENROUTER_URL
     assert kwargs["headers"]["Authorization"] == "Bearer test-key"
-    assert kwargs["json"]["model"] == "openai/gpt-4o-mini"
-    assert kwargs["json"]["models"][0] == "openai/gpt-4o-mini"
-    assert "openai/gpt-4o-mini" not in kwargs["json"]["models"][1:]
+    assert kwargs["json"]["model"] == "anthropic/claude-haiku-4.5"
+    # The primary is never repeated as its own backup.
+    assert kwargs["json"]["models"] == ["anthropic/claude-haiku-4.5"]
     assert kwargs["json"]["provider"] == {"sort": "latency"}
     assert kwargs["timeout"]
 

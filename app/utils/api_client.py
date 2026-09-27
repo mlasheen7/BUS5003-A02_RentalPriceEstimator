@@ -30,9 +30,9 @@ except ImportError:  # Supports direct execution: python app/utils/api_client.py
 
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
-DEFAULT_MODEL = "anthropic/claude-haiku-4.5"
+DEFAULT_MODEL = "openai/gpt-4o-mini"
 # Tried in order by OpenRouter if the primary model is unavailable.
-DEFAULT_BACKUP_MODELS = ("openai/gpt-4o-mini",)
+DEFAULT_BACKUP_MODELS = ("anthropic/claude-haiku-4.5",)
 TIMEOUT_SECONDS = (3.05, 10)  # (connect, read)
 MAX_TOKENS = 200
 TOP_DRIVERS = 5
@@ -111,8 +111,8 @@ class ExplanationClient:
             "max_tokens": MAX_TOKENS,
             "temperature": 0.3,
             "usage": {"include": True},
-            # Same model, fastest host: Haiku is served by several providers
-            # (Anthropic, Bedrock, Vertex); pick the one responding quickest.
+            # Same model, fastest host: most models are served by several providers
+            # (e.g. OpenAI and Azure); pick the one responding quickest.
             "provider": {"sort": "latency"},
         }
         headers = {

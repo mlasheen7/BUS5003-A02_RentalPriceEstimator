@@ -82,8 +82,9 @@ Setup:
 
 1. Add `OPENROUTER_API_KEY` to your `.env` (see `.env.example`). Set a spending
    limit on the key in the OpenRouter dashboard.
-2. Optionally change `EXPLAIN_MODEL` (default `anthropic/claude-haiku-4.5`) to any
-   OpenRouter model ID. No code change is needed.
+2. Optionally change `EXPLAIN_MODEL` to any OpenRouter model ID. No code change is
+   needed. The default is `openai/gpt-4o-mini`, with `anthropic/claude-haiku-4.5` as
+   the automatic backup; see PR #4 for the comparison behind that choice.
 3. Build the model once, since `models/*.pkl` is not in Git:
    ```bash
    python src/models/train.py
@@ -99,7 +100,7 @@ client = ExplanationClient()              # app.utils.api_client
 row = find_suburb_row(merged, suburb, bedrooms, property_type)  # LookupError if not in the data
 result = explainer.explain(explainer.feature_row(row))
 response = client.explain(row, result)    # response["explanation"], response["used_fallback"], ...
-# Explanations take about 2 seconds; wrap the call in st.spinner("Explaining...").
+# Explanations take 1-2 seconds; wrap the call in st.spinner("Explaining...").
 ```
 
 Build `explainer` and `client` once (e.g. with `st.cache_resource`). The tests mock
