@@ -99,6 +99,7 @@ client = ExplanationClient()              # app.utils.api_client
 row = find_suburb_row(merged, suburb, bedrooms, property_type)  # LookupError if not in the data
 result = explainer.explain(explainer.feature_row(row))
 response = client.explain(row, result)    # response["explanation"], response["used_fallback"], ...
+# Explanations take about 2 seconds; wrap the call in st.spinner("Explaining...").
 ```
 
 Build `explainer` and `client` once (e.g. with `st.cache_resource`). The tests mock

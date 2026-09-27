@@ -71,8 +71,8 @@ class ExplanationClient:
     ) -> Dict[str, Any]:
         """Return an explanation for one prediction.
 
-        Keys: explanation, used_fallback, model, latency_s, prompt_tokens,
-        completion_tokens, cost_usd, error.
+        Keys: explanation, used_fallback, model, provider, latency_s,
+        prompt_tokens, completion_tokens, cost_usd, error.
         """
         cache_key = (
             str(suburb_row["suburb"]),
@@ -111,6 +111,9 @@ class ExplanationClient:
             "max_tokens": MAX_TOKENS,
             "temperature": 0.3,
             "usage": {"include": True},
+            # Same model, fastest host: Haiku is served by several providers
+            # (Anthropic, Bedrock, Vertex); pick the one responding quickest.
+            "provider": {"sort": "latency"},
         }
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -140,6 +143,7 @@ class ExplanationClient:
             "explanation": text,
             "used_fallback": False,
             "model": body.get("model", self.model),
+            "provider": body.get("provider"),
             "prompt_tokens": usage.get("prompt_tokens"),
             "completion_tokens": usage.get("completion_tokens"),
             "cost_usd": usage.get("cost"),
@@ -194,6 +198,7 @@ def _fallback(
         "explanation": text,
         "used_fallback": True,
         "model": None,
+        "provider": None,
         "prompt_tokens": None,
         "completion_tokens": None,
         "cost_usd": None,
@@ -266,7 +271,8 @@ def _demo(argv: Sequence[str]) -> None:
     print(f"{_describe_property(row)} in {_title(row['suburb'])}: ${result.prediction:,.0f}/week")
     print(f"(actual median in the data: ${float(row['median_weekly_rent']):,.0f}/week)\n")
     print(response["explanation"], "\n")
-    print(f"model={response['model']}  fallback={response['used_fallback']}  "
+    print(f"model={response['model']} via {response['provider']}  "
+          f"fallback={response['used_fallback']}  "
           f"latency={response['latency_s']}s  tokens={response['prompt_tokens']}+"
           f"{response['completion_tokens']}  cost=${response['cost_usd']}")
     if response["error"]:

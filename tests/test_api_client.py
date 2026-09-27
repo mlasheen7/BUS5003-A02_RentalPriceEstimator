@@ -62,6 +62,7 @@ class FakeSession:
 def ok_body(text="Footscray rent is below the typical estimate mainly because it is a 2-bedroom flat."):
     return {
         "model": "anthropic/claude-haiku-4.5",
+        "provider": "Amazon Bedrock",
         "choices": [{"message": {"content": text}}],
         "usage": {"prompt_tokens": 380, "completion_tokens": 60, "cost": 0.00068},
     }
@@ -79,6 +80,7 @@ def test_successful_call_returns_the_model_text():
     assert out["used_fallback"] is False
     assert out["error"] is None
     assert out["model"] == "anthropic/claude-haiku-4.5"
+    assert out["provider"] == "Amazon Bedrock"
     assert (out["prompt_tokens"], out["completion_tokens"]) == (380, 60)
     assert out["cost_usd"] == pytest.approx(0.00068)
     assert out["latency_s"] >= 0
@@ -94,6 +96,7 @@ def test_request_uses_openrouter_with_the_configured_model_and_key():
     assert kwargs["json"]["model"] == "openai/gpt-4o-mini"
     assert kwargs["json"]["models"][0] == "openai/gpt-4o-mini"
     assert "openai/gpt-4o-mini" not in kwargs["json"]["models"][1:]
+    assert kwargs["json"]["provider"] == {"sort": "latency"}
     assert kwargs["timeout"]
 
 
