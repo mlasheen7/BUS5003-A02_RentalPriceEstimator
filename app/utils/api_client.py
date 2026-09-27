@@ -41,8 +41,9 @@ SYSTEM_PROMPT = """You explain rental price estimates to renters in Victoria, Au
 
 Rules:
 - Use only the facts you are given. Do not invent numbers, amenities, landmarks, transport links or market trends.
-- The factors come from a statistical model. Say the model links a factor with higher or lower rent; never say a factor causes the rent.
-- Mention the two or three largest factors and whether each pushes the estimate up or down.
+- Never add, combine, subtract or otherwise calculate numbers. Quote each dollar figure exactly as given, and give each factor its own figure.
+- The factors come from a statistical model. Describe their effect on the estimate ("raises the estimate by about $126", "the model links this with a lower estimate"). Never say a factor adds to, costs, reduces or causes the rent itself.
+- Mention the two or three largest factors and whether each raises or lowers the estimate.
 - Write 2 to 3 sentences of plain text, under 90 words. No markdown, no lists, no headings.
 - Money is in Australian dollars per week."""
 
@@ -202,7 +203,10 @@ def _fallback(
 
 def _describe_driver(driver: Driver) -> str:
     direction = "raises" if driver.effect >= 0 else "lowers"
-    return f"{driver.label} ({driver.value}) {direction} it by about ${abs(driver.effect):,.0f}"
+    return (
+        f"{driver.label} ({driver.value}) {direction} the estimate "
+        f"by about ${abs(driver.effect):,.0f}"
+    )
 
 
 def _describe_property(suburb_row: Mapping[str, Any]) -> str:

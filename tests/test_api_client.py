@@ -108,10 +108,13 @@ def test_prompt_carries_the_facts_and_the_rules():
     make_client(session).explain(FOOTSCRAY, RESULT)
     system, user = session.calls[0][1]["json"]["messages"]
 
-    assert system["role"] == "system" and "Use only the facts" in system["content"]
+    assert system["role"] == "system"
+    for rule in ["Use only the facts", "Never add, combine, subtract",
+                 "Never say a factor adds to, costs, reduces or causes the rent"]:
+        assert rule in system["content"], rule
     assert user["role"] == "user"
     for fact in ["Footscray", "2-bedroom flat", "$531 per week", "$1,763 per week",
-                 "1,030", "6.0 km", "lowers it by about $70", "-4.0%"]:
+                 "1,030", "6.0 km", "lowers the estimate by about $70", "-4.0%"]:
         assert fact in user["content"], fact
 
 
@@ -135,7 +138,7 @@ def test_missing_key_falls_back_without_calling_the_api():
     assert out["used_fallback"] is True
     assert "OPENROUTER_API_KEY" in out["error"]
     assert "$531 per week" in out["explanation"]
-    assert "number of bedrooms (2) lowers it by about $70" in out["explanation"]
+    assert "number of bedrooms (2) lowers the estimate by about $70" in out["explanation"]
 
 
 @pytest.mark.parametrize(
