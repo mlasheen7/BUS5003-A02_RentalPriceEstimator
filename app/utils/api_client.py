@@ -44,6 +44,7 @@ Rules:
 - Never add, combine, subtract or otherwise calculate numbers. Quote each dollar figure exactly as given, and give each factor its own figure.
 - The factors come from a statistical model. Describe their effect on the estimate ("raises the estimate by about $126", "the model links this with a lower estimate"). Never say a factor adds to, costs, reduces or causes the rent itself.
 - Mention the two or three largest factors and whether each raises or lowers the estimate.
+- Stop after the last factor. No closing summary or filler phrase about the overall price.
 - Write 2 to 3 sentences of plain text, under 90 words. No markdown, no lists, no headings.
 - Money is in Australian dollars per week."""
 
@@ -161,7 +162,7 @@ def build_prompt(
         f"Estimated rent: ${result.prediction:,.0f} per week",
         f"Model's starting point before suburb and property details: ${result.baseline:,.0f} per week",
         "",
-        "Largest factors in this estimate (effect on weekly rent):",
+        "Largest factors in this estimate (effect on the weekly estimate):",
     ]
     lines += [f"- {_describe_driver(d)}" for d in drivers]
     income = float(suburb_row["Median_Household_Income_Weekly_AUD"])
