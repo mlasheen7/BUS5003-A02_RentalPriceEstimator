@@ -1,6 +1,15 @@
 # CLAUDE API SETUP & EXPLANATION GUIDE
 ## For PERSON C (API Engineer)
 
+> ⚠️ **Superseded: do not follow the setup or code in this guide.**
+> The AI explanations are implemented in `app/utils/shap_explainer.py` and
+> `app/utils/api_client.py`, and they call the model through **OpenRouter**, not the
+> Anthropic SDK used below. The key is `OPENROUTER_API_KEY` (not `CLAUDE_API_KEY` or
+> `ANTHROPIC_API_KEY`), and the model is set by `EXPLAIN_MODEL` in `.env`.
+> For setup and usage from the app, see the **AI Explanations** section of
+> [README.md](README.md). This guide is kept for its original goals (latency, cost,
+> fallback), which the implementation follows.
+
 ---
 
 ## 📋 OVERVIEW
