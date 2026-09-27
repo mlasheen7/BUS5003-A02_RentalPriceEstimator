@@ -69,6 +69,41 @@ python src/data/pipeline.py
 
 You need the three raw source files first — `data/README.md` lists them and where they come from. The committed contents of `data/processed/` are the output of the last run, so you can start modelling without them.
 
+## AI Explanations
+
+Each prediction comes with a short plain-English explanation of what drove it.
+`app/utils/shap_explainer.py` breaks the prediction into its SHAP drivers
+(AUD/week per factor), and `app/utils/api_client.py` turns them into 2–3 sentences
+through [OpenRouter](https://openrouter.ai). If the key is missing or the API
+fails, a template explanation built from the same drivers is shown instead, so the
+app never breaks.
+
+Setup:
+
+1. Add `OPENROUTER_API_KEY` to your `.env` (see `.env.example`). Set a spending
+   limit on the key in the OpenRouter dashboard.
+2. Optionally change `EXPLAIN_MODEL` (default `anthropic/claude-haiku-4.5`) to any
+   OpenRouter model ID. No code change is needed.
+3. Build the model once, since `models/*.pkl` is not in Git:
+   ```bash
+   python src/models/train.py
+   python src/models/tune_hyperparameters.py
+   ```
+4. Try it: `python -m app.utils.api_client footscray 2 flat`
+
+Using it from the app:
+
+```python
+explainer = ShapExplainer(model)          # app.utils.shap_explainer
+client = ExplanationClient()              # app.utils.api_client
+row = find_suburb_row(merged, suburb, bedrooms, property_type)  # LookupError if not in the data
+result = explainer.explain(explainer.feature_row(row))
+response = client.explain(row, result)    # response["explanation"], response["used_fallback"], ...
+```
+
+Build `explainer` and `client` once (e.g. with `st.cache_resource`). The tests mock
+the API, so `pytest` needs no key and makes no paid calls.
+
 ## Development Workflow
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full branch → PR → review → merge process.
