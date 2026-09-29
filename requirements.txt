@@ -1,52 +1,12 @@
-# Python 3.9 - 3.11 only.
-# pycaret 3.3.2 caps numpy<1.27 and pandas<2.2, and neither numpy 1.24.3 nor
-# pandas 2.0.3 ships a wheel for Python 3.12+, so 3.12 fails to install.
-
-# Core Data Science
+# Slim dependency list for Streamlit Community Cloud.
+# Streamlit Cloud uses this file because it sits next to app/main.py.
+# Choose Python 3.11 in the Streamlit Cloud deploy settings.
 pandas==2.0.3
 numpy==1.24.3
 scikit-learn==1.4.2
-
-# Excel readers - src/data/pipeline.py calls pd.read_excel on two .xlsx inputs
-openpyxl==3.1.5
-
-# AutoML & ML Models
 xgboost==2.0.0
-pycaret==3.3.2
-optuna==3.6.2
-
-# Model Interpretability & Explainability
 shap==0.42.1
-
-# ML & Model Evaluation
-scipy==1.11.2
-matplotlib==3.7.2
-seaborn==0.12.2
-
-# API & LLM Integration
-# 0.69.0 is the newest release that still supports Python 3.9 and exposes the
-# Messages API (client.messages.create) that CLAUDE_API_SETUP_GUIDE.md uses.
-anthropic==0.69.0
-python-dotenv==1.0.0
-requests==2.31.0
-
-# Web Framework (for Streamlit deployment)
-streamlit==1.27.0
+streamlit==1.40.2
 plotly==5.16.1
-
-# Testing & Quality
-pytest==7.4.0
-pytest-cov==4.1.0
-
-# Notebooks
-jupyter==1.0.0
-ipykernel==6.25.1
-
-# Database (if using PostgreSQL)
-# psycopg2-binary==2.9.7
-# sqlalchemy==2.0.20
-
-# Development
-black==23.9.1
-flake8==6.0.0
-pylint==2.17.5
+requests==2.31.0
+python-dotenv==1.0.0
