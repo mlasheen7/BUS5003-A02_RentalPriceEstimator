@@ -8,7 +8,7 @@ import streamlit as st
 
 from app.utils.app_state import footer, setup_page
 
-# setup_page("About")
+setup_page("About")
 st.title("ℹ️ About this project")
 st.markdown("""
 **Rental Price Estimator** helps renters understand fair market rent across Victorian suburbs.

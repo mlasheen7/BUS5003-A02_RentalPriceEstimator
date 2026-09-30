@@ -8,7 +8,7 @@ import streamlit as st
 
 from app.utils.app_state import ai_is_configured, footer, get_data, get_model, setup_page
 
-# setup_page("Home")
+setup_page("Home")
 df = get_data()
 model = get_model()
 

@@ -13,7 +13,7 @@ from app.utils.app_state import (
 )
 from app.utils.shap_explainer import SUPPORTED_COMBINATIONS, find_suburb_row
 
-# setup_page("Predict")
+setup_page("Predict")
 df = get_data()
 model = get_model()
 

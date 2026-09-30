@@ -11,7 +11,7 @@ import streamlit as st
 from app.utils.app_state import PROPERTY_LABELS, comparables_table, find_comparables, footer, get_data, setup_page
 from app.utils.shap_explainer import SUPPORTED_COMBINATIONS, find_suburb_row
 
-# setup_page("Comparables")
+setup_page("Comparables")
 df = get_data()
 
 st.title("🏘️ Compare similar suburbs")
