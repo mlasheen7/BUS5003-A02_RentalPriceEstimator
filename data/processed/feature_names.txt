@@ -10,16 +10,13 @@ income_x_seifa
 house_change_perc_24-25
 Population_2021
 rental_count
-affluence_bin
 affluence_very_low
 affluence_low
 affluence_medium
 affluence_high
 affluence_very_high
-property_type
 property_flat
 property_house
-growth_category
 growth_declining
 growth_slow_growth
 growth_moderate_growth

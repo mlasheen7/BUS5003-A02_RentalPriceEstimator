@@ -1,7 +1,7 @@
 {
   "model_type": "XGBoost Regressor (Tuned)",
   "model_version": "xgboost_tuned",
-  "trained_at_utc": "2026-09-22T00:53:46.953815+00:00",
+  "trained_at_utc": "2026-09-30T11:29:08.821399+00:00",
   "optimization": {
     "library": "Optuna",
     "n_trials": 50,

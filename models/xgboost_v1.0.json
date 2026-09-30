@@ -1,7 +1,7 @@
 {
   "model_type": "XGBoost Regressor (Baseline)",
   "model_version": "xgboost_v1.0",
-  "trained_at_utc": "2026-09-22T00:40:25.560659+00:00",
+  "trained_at_utc": "2026-09-30T11:27:59.441901+00:00",
   "data": {
     "total_rows": 1177,
     "training_rows": 941,

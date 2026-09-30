@@ -1,6 +1,6 @@
 # Rental Price Estimator — Baseline Model Performance
 
-Generated (UTC): 2026-09-22T00:40:25.560659+00:00
+Generated (UTC): 2026-09-30T11:27:59.441901+00:00
 
 ## Data and Split
 
