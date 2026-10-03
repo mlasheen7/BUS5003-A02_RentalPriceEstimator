@@ -70,11 +70,12 @@ class ExplanationClient:
     def explain(
         self, suburb_row: Mapping[str, Any], result: PredictionExplanation
     ) -> Dict[str, Any]:
-        """Return an explanation for one prediction.
-
-        Keys: explanation, used_fallback, model, provider, latency_s,
-        prompt_tokens, completion_tokens, cost_usd, error.
-        """
+        """Return an explanation for one prediction."""
+        
+        print(f"\n🔍 explain() called")
+        print(f"   Suburb: {suburb_row['suburb']}")
+        print(f"   API Key set: {bool(self.api_key)}")
+        
         cache_key = (
             str(suburb_row["suburb"]),
             int(suburb_row["bedrooms"]),
@@ -82,7 +83,9 @@ class ExplanationClient:
             round(result.prediction),
             self.model,
         )
+        
         if cache_key in self._cache:
+            print(f"   📦 Returning cached response")
             return {**self._cache[cache_key], "latency_s": 0.0}
 
         start = time.perf_counter()
@@ -93,15 +96,21 @@ class ExplanationClient:
         ]
 
         if not self.api_key:
+            print(f"   ❌ No API key - using fallback")
             response = _fallback(suburb_row, result, drivers, "OPENROUTER_API_KEY is not set")
         else:
+            print(f"   🔄 Calling API...")
             response = self._call_api(messages)
             if response.get("error"):
+                print(f"   ❌ API error: {response['error']} - using fallback")
                 response = _fallback(suburb_row, result, drivers, response["error"])
+            else:
+                print(f"   ✅ API success")
 
         response["latency_s"] = round(time.perf_counter() - start, 3)
         if not response["used_fallback"]:
             self._cache[cache_key] = dict(response)
+        
         return response
 
     def _call_api(self, messages: List[Dict[str, str]]) -> Dict[str, Any]:
@@ -112,8 +121,6 @@ class ExplanationClient:
             "max_tokens": MAX_TOKENS,
             "temperature": 0.3,
             "usage": {"include": True},
-            # Same model, fastest host: most models are served by several providers
-            # (e.g. OpenAI and Azure); pick the one responding quickest.
             "provider": {"sort": "latency"},
         }
         headers = {
@@ -121,25 +128,47 @@ class ExplanationClient:
             "Content-Type": "application/json",
             "X-Title": "Rental Price Estimator",
         }
+        
+        # DEBUG: Print API call details
+        print(f"\n📡 _call_api() executing")
+        print(f"   Model: {self.model}")
+        print(f"   API Key present: {bool(self.api_key)}")
+        print(f"   API Key: {self.api_key[:20] if self.api_key else 'NONE'}...")
+        print(f"   URL: {OPENROUTER_URL}")
+        
         try:
+            print(f"   Posting request...")
             reply = self.session.post(
                 OPENROUTER_URL, json=payload, headers=headers, timeout=self.timeout
             )
+            print(f"   Got response: HTTP {reply.status_code}")
+            
         except requests.RequestException as exc:
+            print(f"   ❌ Request failed: {type(exc).__name__}: {exc}")
             return {"error": f"Request failed: {type(exc).__name__}"}
 
         if reply.status_code != 200:
+            print(f"   ❌ HTTP Error: {reply.status_code}")
+            print(f"   Response: {reply.text[:300]}")
             return {"error": f"OpenRouter returned HTTP {reply.status_code}"}
 
         try:
             body = reply.json()
             text = (body["choices"][0]["message"]["content"] or "").strip()
-        except (ValueError, KeyError, IndexError, TypeError):
+            print(f"   ✅ Got text: {text[:50]}...")
+            
+        except (ValueError, KeyError, IndexError, TypeError) as e:
+            print(f"   ❌ Parse error: {e}")
+            print(f"   Response body: {reply.text[:200]}")
             return {"error": "Unexpected response format from OpenRouter"}
+            
         if not text:
+            print(f"   ❌ Empty text returned")
             return {"error": "OpenRouter returned an empty explanation"}
 
         usage = body.get("usage") or {}
+        print(f"   ✅ Success! Cost: ${usage.get('cost', 'unknown')}")
+        
         return {
             "explanation": text,
             "used_fallback": False,
@@ -227,17 +256,26 @@ def _setting(name: str) -> Optional[str]:
     """Read a setting from the environment / .env, then Streamlit secrets."""
     load_dotenv()
     value = os.getenv(name)
+    
+    # DEBUG: Print where key came from
+    print(f"🔍 DEBUG: Looking for {name}")
+    print(f"   From .env: {value[:15] if value else 'NOT FOUND'}...")
+    
     if value:
         return value
     try:
         from streamlit import runtime
 
-        if not runtime.exists():  # Plain Python, not `streamlit run`
+        if not runtime.exists():
+            print(f"   Not in Streamlit session")
             return None
         import streamlit as st
 
-        return st.secrets.get(name)
-    except Exception:  # No secrets file configured
+        st_value = st.secrets.get(name)
+        print(f"   From st.secrets: {st_value[:15] if st_value else 'NOT FOUND'}...")
+        return st_value
+    except Exception as e:
+        print(f"   Error reading secrets: {e}")
         return None
 
 

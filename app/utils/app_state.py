@@ -57,7 +57,7 @@ def setting(name: str) -> Optional[str]:
 def get_client() -> ExplanationClient:
     # Pass the settings in, so the client never has to look them up itself.
     return ExplanationClient(
-        api_key=setting("OPENROUTER_API_KEY") or "",
+        api_key=setting("OPENROUTER_API_KEY") ,
         model=setting("EXPLAIN_MODEL") or DEFAULT_MODEL,
     )
 
