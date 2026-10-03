@@ -39,6 +39,7 @@ class FakeResponse:
         self.status_code = status_code
         self._body = body
         self._bad_json = bad_json
+        self.text = str(body) if body else ""  # ← ADD THIS LINE
 
     def json(self):
         if self._bad_json:
