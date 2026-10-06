@@ -14,7 +14,7 @@ model = get_model()
 
 st.title("❓ Frequently asked questions")
 
-with st.expander("How does the estimator work?", expanded=True):
+with st.expander("How does the estimator work?", expanded=False):
     st.write("An XGBoost regression model, tuned with Optuna, learns how weekly rent relates to bedrooms, "
              "property type and suburb characteristics such as household income, SEIFA advantage score, "
              "employment, Year 12 completion, distance to the CBD and recent house price growth.")
