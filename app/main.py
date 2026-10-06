@@ -12,20 +12,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Define navigation pages
-"""
-#pages = [
-#    st.Page("pages/0_Home.py", title="Home", icon="🏠", default=True),
-#    st.Page("pages/1_Predict.py", title="Predict", icon="📊"),
-#    st.Page("pages/2_Comparables.py", title="Comparables", icon="🏘️"),
-#    st.Page("pages/3_FAQ.py", title="FAQ", icon="❓"),
-#    st.Page("pages/4_About.py", title="About", icon="ℹ️"),
-#]
 
-
-# Run navigation
-st.navigation(pages).run()
-"""
 
 st.title("🏠 Rental Price Estimator")
 st.write("Select a page from the sidebar to get started.")
